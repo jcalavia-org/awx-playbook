@@ -6,7 +6,8 @@
     command: docker exec awx_postgres pg_dump -U awx -Fc awx
     register: dump
 
-  - copy:
-    content: "{{ dump.stdout }}"
-    dest: "awx_db_{{ ansible_date_time.iso8601_micro }}.dump"
+  - name: 'Create file from dump action'
+    copy:
+      content: "{{ dump.stdout }}"
+      dest: "awx_db_{{ ansible_date_time.iso8601_micro }}.dump"
   
