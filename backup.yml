@@ -3,4 +3,4 @@
 
   tasks:
   - name: 'Backup database with pg_dump'
-    command: docker exec awx_postgres pg_dump -U awx -Fc awx > `date +%m.%d.%y_%H.%M.%S`_awx_db.dump
+    command: docker exec awx_postgres pg_dump -U awx -Fc awx
