@@ -4,3 +4,6 @@
   tasks:
   - name: 'Backup database with pg_dump'
     command: docker exec awx_postgres pg_dump -U awx -Fc awx
+    register: dump
+  
+  - debug: msg="{{ dump.stdout }}"
