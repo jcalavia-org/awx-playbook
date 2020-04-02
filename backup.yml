@@ -6,5 +6,5 @@
 
   tasks:
   - name: 'Backup database with pg_dump'
-  docker:
-    docker_extra_args: 'pg_dump -U awx -Fc awx > `date +%m.%d.%y_%H.%M.%S`_awx_db.dump'
+    docker:
+      docker_extra_args: 'pg_dump -U awx -Fc awx > `date +%m.%d.%y_%H.%M.%S`_awx_db.dump'
