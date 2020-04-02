@@ -1,10 +1,6 @@
 - hosts: awx
   become: true
 
-  vars:
-    - ansible_docker_host: awx_postgres
-
   tasks:
   - name: 'Backup database with pg_dump'
-    docker:
-      docker_extra_args: 'pg_dump -U awx -Fc awx > `date +%m.%d.%y_%H.%M.%S`_awx_db.dump'
+    command: 'docker exec awx_postgres pg_dump -U awx -Fc awx > `date +%m.%d.%y_%H.%M.%S`_awx_db.dump'
