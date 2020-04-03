@@ -65,14 +65,12 @@
       force_archive: true
   
   - name: 'Upload {{ dump_archive_path }} to S· Bucket {{ aws_s3_bucket }}'
-    s3_sync:
+    aws_s3:
       region: 'eu-west-1'
       bucket: "{{ aws_s3_bucket }}"
-      file_root: "{{ backup_directory }}"
-      key_prefix: "{{ aws_s3_bucket_prefix }}"
-      file_change_strategy: force
-      include: "*.dump.tar.gz"
-      exclude: "*,.*"
+      src: "{{ dump_archive_path }}"
+      object: "/{{ aws_s3_bucket_prefix }}/{{ dump_filename }}.tar.gz"
+      mode: "put"
 
   - name: 'Cleanup archives'
     file:
