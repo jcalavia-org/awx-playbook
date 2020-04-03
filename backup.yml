@@ -37,7 +37,7 @@
   
   - name: 'Ensure mandatory dependencies are present'
     apt:
-      name: 'boto boto3 botocore python python-dateutil'
+      name: 'python-dateutil'
       state: present
       update_cache: yes
     
