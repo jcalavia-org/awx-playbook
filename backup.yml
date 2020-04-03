@@ -43,8 +43,6 @@
       msg: 'variable {{item}} not defined'
     when: item not in vars
     with_items:
-      - aws_access_key
-      - aws_secret_key
       - aws_s3_bucket
       - aws_s3_bucket_prefix
 
@@ -71,7 +69,7 @@
       src: "{{ dump_archive_path }}"
       object: "/{{ aws_s3_bucket_prefix }}/{{ dump_filename }}.tar.gz"
       mode: "put"
-      
+
   - name: 'Cleanup archives'
     file:
       path: "{{ item }}"
