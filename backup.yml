@@ -2,15 +2,52 @@
   become: true
 
   vars:
-    - backup_url: "/tmp/awx_db_{{ ansible_date_time.iso8601_micro }}.dump"
+    - backup_directory: '/tmp'
+    - dump_filename: "awx_db_{{ ansible_date_time.iso8601_micro }}.dump" 
+    - dump_filepath: "{{ backup_directory }}/{{ dump_filename }}"
+    - dump_archive_path: "{{ backup_directory }}/{{ dump_filename }}.tar.gz"
 
   tasks:
+
+  - name: 'Check mandatory variables' 
+    fail:
+      msg: 'variable {{item}} not defined'
+    when: item is not defined
+    with_items:
+      - aws_access_key
+      - aws_secret_key
+      - aws_s3_bucket
+      - aws_s3_bucket_prefix
+  
   - name: 'Backup database with pg_dump'
     command: docker exec awx_postgres pg_dump -U awx -Fc awx
-    register: dump
+    register: dump_content
 
   - name: 'Create file from dump action'
     copy:
-      content: "{{ dump.stdout }}"
-      dest: "{{ backup_url }}"
-  
+      content: "{{ dump_content.stdout }}"
+      dest: "{{ dump_filepath }}"
+
+  - name: Create a tar.gz archive of a single file.
+    archive:
+      path: "{{ dump_filepath }}" 
+      dest: "{{ dump_archive_path }}"
+      format: gz
+      force_archive: true
+    
+  - name: 'Upload {{ dump_archive_path }} to S· Bucket {{ aws_s3_bucket }}'
+    s3_sync:
+      bucket: "{{ aws_s3_bucket }}"
+      file_root: "{{ backup_directory }}"
+      key_prefix: "{{ aws_s3_bucket_prefix }}"
+      file_change_strategy: force
+      include: "*.dump.tar.gz"
+      exclude: "*,.*"
+
+  - name: 'Cleanup archives'
+    file:
+      path: "{{ item }}"
+      state: absent
+    with_items:
+      - dump_filepath 
+      - dump_archive_path
