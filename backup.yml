@@ -66,6 +66,7 @@
   
   - name: 'Upload {{ dump_archive_path }} to S· Bucket {{ aws_s3_bucket }}'
     s3_sync:
+      region: 'eu-west-1'
       bucket: "{{ aws_s3_bucket }}"
       file_root: "{{ backup_directory }}"
       key_prefix: "{{ aws_s3_bucket_prefix }}"
