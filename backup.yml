@@ -64,18 +64,19 @@
       format: gz
       force_archive: true
   
-#  - name: 'Upload {{ dump_archive_path }} to S· Bucket {{ aws_s3_bucket }}'
-#    aws_s3:
-#      region: 'eu-west-1'
-#      bucket: "{{ aws_s3_bucket }}"
-#      src: "{{ dump_archive_path }}"
-#      object: "/{{ aws_s3_bucket_prefix }}/{{ dump_filename }}.tar.gz"
-#      mode: "put"
-
-#  - name: 'Cleanup archives'
-#    file:
-#      path: "{{ item }}"
-#      state: absent
-#    with_items:
-#      - dump_filepath 
-#      - dump_archive_path
+  - name: 'Upload {{ dump_archive_path }} to S· Bucket {{ aws_s3_bucket }}'
+    aws_s3:
+      region: 'eu-west-1'
+      bucket: "{{ aws_s3_bucket }}"
+      src: "{{ dump_archive_path }}"
+      object: "/{{ aws_s3_bucket_prefix }}/{{ dump_filename }}.tar.gz"
+      mode: "put"
+      
+  - name: 'Cleanup archives'
+    file:
+      path: "{{ item }}"
+      state: absent
+    with_items:
+      - dump_filepath 
+      - dump_archive_path
+ 
