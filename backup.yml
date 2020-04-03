@@ -1,3 +1,32 @@
+- name: 'Install OS dependencies' 
+  hosts: awx
+  become: true
+
+  vars:
+   s3_sync_dependencies:
+      - python
+      - python-dateutil
+
+  tasks:
+  - name: 'Ensure mandatory dependencies are present'
+    package:
+      name: "{{ item }}"
+      state: present      
+    loop: "{{ s3_sync_dependencies }}"
+
+- name: 'Install python dependencies' 
+  hosts: awx
+  become: true
+
+  vars:
+    pip_install_packages:
+      - name: botocore
+      - name: boto
+      - name: boto3
+
+  roles:
+    - geerlingguy.pip
+
 - hosts: awx
   become: true
 
@@ -6,12 +35,6 @@
     dump_filename: "awx_db_{{ ansible_date_time.iso8601_micro }}.dump" 
     dump_filepath: "{{ backup_directory }}/{{ dump_filename }}"
     dump_archive_path: "{{ backup_directory }}/{{ dump_filename }}.tar.gz"
-    s3_sync_dependencies:
-      - boto
-      - boto3
-      - botocore
-      - python
-      - python-dateutil
 
   tasks:
 
@@ -41,12 +64,6 @@
       format: gz
       force_archive: true
   
-  - name: 'Ensure mandatory dependencies are present'
-    package:
-      name: "{{ item }}"
-      state: present      
-    loop: "{{ s3_sync_dependencies }}"
-    
   - name: 'Upload {{ dump_archive_path }} to S· Bucket {{ aws_s3_bucket }}'
     s3_sync:
       bucket: "{{ aws_s3_bucket }}"
