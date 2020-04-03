@@ -12,13 +12,12 @@
   - name: 'Check mandatory variables' 
     fail:
       msg: 'variable {{item}} not defined'
-    when: item is not defined
-    with_items:
+    when: item not in vars
       - aws_access_key
       - aws_secret_key
       - aws_s3_bucket
       - aws_s3_bucket_prefix
-  
+
   - name: 'Backup database with pg_dump'
     command: docker exec awx_postgres pg_dump -U awx -Fc awx
     register: dump_content
