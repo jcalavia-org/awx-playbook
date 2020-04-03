@@ -13,6 +13,7 @@
     fail:
       msg: 'variable {{item}} not defined'
     when: item not in vars
+    with_items:
       - aws_access_key
       - aws_secret_key
       - aws_s3_bucket
