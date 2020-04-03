@@ -34,6 +34,12 @@
       dest: "{{ dump_archive_path }}"
       format: gz
       force_archive: true
+  
+  - name: 'Ensure mandatory dependencies are present'
+    apt:
+      name: 'boto boto3 botocore python python-dateutil'
+      state: present
+      update_cache: yes
     
   - name: 'Upload {{ dump_archive_path }} to S· Bucket {{ aws_s3_bucket }}'
     s3_sync:
