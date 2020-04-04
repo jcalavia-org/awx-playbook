@@ -66,8 +66,8 @@
   
   - name: 'Upload {{ dump_archive_path }} to S· Bucket {{ aws_s3_bucket }}'
     aws_s3:
-      aws_access_key_id: "{{ aws_s3_bucket_access_key_id }}"
-      aws_secret_access_key: "{{ aws_s3_bucket_secret_access_key }}"
+      aws_access_key: "{{ aws_s3_bucket_access_key_id }}"
+      aws_secret_key: "{{ aws_s3_bucket_secret_access_key }}"
       region: 'eu-west-1'
       bucket: "{{ aws_s3_bucket }}"
       src: "{{ dump_archive_path }}"
