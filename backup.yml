@@ -45,6 +45,8 @@
     with_items:
       - aws_s3_bucket
       - aws_s3_bucket_prefix
+      - aws_s3_bucket_access_key_id
+      - aws_s3_bucket_secret_access_key 
 
   - name: 'Backup database with pg_dump'
     command: docker exec awx_postgres pg_dump -U awx -Fc awx
@@ -64,6 +66,8 @@
   
   - name: 'Upload {{ dump_archive_path }} to S· Bucket {{ aws_s3_bucket }}'
     aws_s3:
+      aws_access_key_id: "{{ aws_s3_bucket_access_key_id }}"
+      aws_secret_access_key: "{{ aws_s3_bucket_secret_access_key }}"
       region: 'eu-west-1'
       bucket: "{{ aws_s3_bucket }}"
       src: "{{ dump_archive_path }}"
